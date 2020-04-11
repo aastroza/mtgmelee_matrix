@@ -2,6 +2,53 @@
     <head>
         <title>Matchup Matrix Calculator for MtgMelee.com Tournaments</title>
     </head>
+    <style>
+        h1, h2, form, p {
+            padding: 10px;
+        }
+        table {
+            table-layout: fixed;
+            width: 80%;
+        }
+        table tbody {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        th {
+            text-align: start;
+        }
+        th, td {
+            padding: 10px;
+        }
+        .deck-name {
+            width: 200px;
+            font-weight: bold;
+        }
+        .value {
+            width: 100px;
+            min-width: 100px;
+            max-width: 100px;
+        }
+        .c0 {
+            background-color: #de425b;
+        }
+        .c20 {
+            background-color: #f7965e;
+        }
+        .c40 {
+            background-color: #ffe18d;
+        }
+        .c60 {
+            background-color: #a9b855;
+        }
+        .c80 {
+            background-color: #488f31;
+        }
+        .cnone {
+            background-color: lightslategray;
+        }
+    </style>
     <body>
         <h1>Matchup Matrix Calculator for MtgMelee Tournaments</h1>
         <h2>Please paste your tournament url below and press the <b>Submit</b> button:</h2>
@@ -10,17 +57,18 @@
             <input type = "submit"/>
         </form>
         <p>You read this table from left to right, each cell means the win match rate for the row deck vs the column deck. The number between parentheses corresponds to the number of matches.</p>
-        <table border="1">
+        <table>
             {% for c in columns %}
             <th>{{ c }}</th>
             {% endfor %}
             {% for row in matrix %}
-            <tr>
+            <tr style="border-bottom: 1px solid #f2f2f2;">
+                {% set outerIdx = loop.index0 %}
                 {% for r in row %}
                 {% if loop.index0 == 0 %}
-                    <td><b>{{ r }}</b></td>
+                    <td class="deck-name">{{ r }}</td>
                 {% else %}
-                    <td>{{ r }}</td>
+                    <td class="{{classes[outerIdx][loop.index0]}}">{{ r }}</td>
                 {% endif %}
                 {% endfor %}
             </tr>
