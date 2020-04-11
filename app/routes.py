@@ -118,7 +118,7 @@ def query():
     if request.method == 'POST':
         tournament_url = request.form['tournament_url']
         min_number_matches = 10
-        tournament = int(tournament_url.split('/')[-1])
+        # tournament = int(tournament_url.split('/')[-1])
         response = requests.get(tournament_url)
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -144,7 +144,7 @@ def query():
         columns = ['Player', 'Decklist']
         df_players = pd.DataFrame(data_players, columns=columns)
 
-        data_rounds = []
+        # data_rounds = []
         columns_mu = df_players['Decklist'].unique().tolist()
         data_mu = [[0]*len(columns_mu) for _ in range(len(columns_mu))]
 
@@ -184,27 +184,40 @@ def query():
         def getMatrix(data_mu):
             [m, n] = data_mu.shape
             matrix = [[0]*(n+2) for _ in range(m)]
+            classes = [[0]*(n+2) for _ in range(m)]
+            def get_class(value):
+                if value > 80:
+                    return "value c80"
+                if value > 60:
+                    return "value c60"
+                if value > 40:
+                    return "value c40"
+                if value > 20:
+                    return "value c20"
+                return "value c0"
 
             for i in range(0, data_mu.shape[0]):
-                string1 = str(np.round(
-                    100 * sum(data_mu[i, :]) / (sum(data_mu[i, :]) + sum(data_mu[:, i])), 1))+"%"
+                value1 = np.round(
+                    100 * sum(data_mu[i, :]) / (sum(data_mu[i, :]) + sum(data_mu[:, i])), 1)
                 string2 = str(
                     np.round(sum(data_mu[i, :]) + sum(data_mu[:, i]).round(1), 1))
                 matrix[i][0] = columns_mu_short[i]
-                matrix[i][1] = string1+" ("+string2+")"
+                classes[i][0] = columns_mu_short[i]
+                classes[i][1] = get_class(value1)
+                matrix[i][1] = str(value1)+"% ("+string2+")"
                 for j in range(0, n):
                     if(data_mu[i, j] + data_mu[j, i] > 0):
-                        string3 = str(
-                            np.round(100 * data_mu[i, j] / (data_mu[i, j] + data_mu[j, i]), 1))+"%"
+                        value3 = np.round(100 * data_mu[i, j] / (data_mu[i, j] + data_mu[j, i]), 1)
                         string4 = str(np.round(data_mu[i, j] + data_mu[j, i], 1))
-                        matrix[i][j+2] = string3+" ("+string4+")"
+                        classes[i][j+2] = get_class(value3)
+                        matrix[i][j+2] = str(value3)+"% ("+string4+")"
                     else:
+                        classes[i][j+2] = "value cnone"
+                        matrix[i][j+2] = "--"
+            return (matrix, classes)
 
-                        matrix[i][j+2] = None
-            return matrix
-
-        matrix = getMatrix(data_mu_array_short)
+        matrix, classes = getMatrix(data_mu_array_short)
         table_columns = ['', 'Total'] + columns_mu_short
 
-        return render_template('index.html', title='Home', matrix=matrix, columns=table_columns)
+        return render_template('index.html', title='Home', matrix=matrix, columns=table_columns, classes=classes)
 
