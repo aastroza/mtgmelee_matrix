@@ -22,6 +22,17 @@ def getPhaseStandings(phase_id):
     response = r.json()
     return response
 
+def get_class(value):
+    if value > 80:
+        return "value c80"
+    if value > 60:
+        return "value c60"
+    if value > 40:
+        return "value c40"
+    if value > 20:
+        return "value c20"
+    return "value c0"
+
 
 @app.route('/')
 @app.route('/index')
@@ -69,7 +80,6 @@ def query():
         columns = ['Player', 'Decklist']
         df_players = pd.DataFrame(data_players, columns=columns)
 
-        # data_rounds = []
         columns_mu = df_players['Decklist'].unique().tolist()
         data_mu = [[0]*len(columns_mu) for _ in range(len(columns_mu))]
 
@@ -98,7 +108,7 @@ def query():
                     continue
 
         data_mu_array = np.array(data_mu)
-        min_number_matches = max(int(3*np.sum(data_mu_array)/len(columns_mu)),6)
+        min_number_matches = int(3*np.sum(data_mu_array)/len(columns_mu))
 
         mask = data_mu_array.sum(
             axis=1) + data_mu_array.sum(axis=0) >= min_number_matches
@@ -112,16 +122,7 @@ def query():
             [m, n] = data_mu.shape
             matrix = [[0]*(n+2) for _ in range(m)]
             classes = [[0]*(n+2) for _ in range(m)]
-            def get_class(value):
-                if value > 80:
-                    return "value c80"
-                if value > 60:
-                    return "value c60"
-                if value > 40:
-                    return "value c40"
-                if value > 20:
-                    return "value c20"
-                return "value c0"
+            
 
             for i in range(0, data_mu.shape[0]):
                 value1 = np.round(
