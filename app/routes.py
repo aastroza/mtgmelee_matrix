@@ -98,7 +98,7 @@ def query():
                     continue
 
         data_mu_array = np.array(data_mu)
-        min_number_matches = max(int(2*np.sum(data_mu_array)/len(columns_mu)),10)
+        min_number_matches = max(int(3*np.sum(data_mu_array)/len(columns_mu)),6)
 
         mask = data_mu_array.sum(
             axis=1) + data_mu_array.sum(axis=0) >= min_number_matches
