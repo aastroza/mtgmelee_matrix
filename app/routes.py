@@ -36,7 +36,7 @@ def index():
 def query():
     if request.method == 'POST':
         tournament_url = request.form['tournament_url']
-        min_number_matches = 10
+        
         # tournament = int(tournament_url.split('/')[-1])
         response = requests.get(tournament_url)
         soup = BeautifulSoup(response.text, "html.parser")
@@ -44,13 +44,19 @@ def query():
         rounds = []
         phases = []
 
-        for button in soup.findAll('button'):
-            if(len(button['class']) == 3):
-                if(button['class'][2] == 'round-selector'):
-                    if(button.text[0:5] == 'Round'):
-                        rounds.append(button['data-id'])
-                    else:
+        divTag_phase = soup.find_all('div', {'id': 'standings-phase-selector-container'})
+        for tag in divTag_phase:
+            for button in tag.findAll('button'):
+                if(len(button['class']) == 3):
+                    if(button['class'][2] == 'round-selector'):
                         phases.append(button['data-id'])
+        
+        divTag_round = soup.find_all('div', {'id': 'pairings-round-selector-container'})
+        for tag in divTag_round:
+            for button in tag.findAll('button'):
+                if(len(button['class']) == 3):
+                    if(button['class'][2] == 'round-selector'):
+                        rounds.append(button['data-id'])
 
         standing = getPhaseStandings(phases[-1])
         data_players = []
@@ -92,6 +98,8 @@ def query():
                     continue
 
         data_mu_array = np.array(data_mu)
+        min_number_matches = int(2*np.sum(data_mu_array)/len(columns_mu))
+
         mask = data_mu_array.sum(
             axis=1) + data_mu_array.sum(axis=0) >= min_number_matches
         columns_mu_short = [i for j, i in enumerate(
