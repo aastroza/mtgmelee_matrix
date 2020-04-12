@@ -63,27 +63,37 @@
             <li><b>This tool works only with finished tournaments.</b></li>
             <li>Most played Archetypes are shown in the table.</li>
         </ul>
-        <table>
-            {% for c in columns %}
-            <th>{{ c }}</th>
-            {% endfor %}
-            {% for row in matrix %}
-            <tr style="border-bottom: 1px solid #f2f2f2;">
-                {% set outerIdx = loop.index0 %}
-                {% for r in row %}
-                {% if loop.index0 == 0 %}
-                    <td class="deck-name">{{ r }}</td>
-                {% else %}
-                    <td class="{{classes[outerIdx][loop.index0]}}">{{ r }}</td>
-                {% endif %}
+        <table id="example">
+            <thead>
+                <tr>
+                {% for c in columns %}
+                <th>{{ c }}</th>
                 {% endfor %}
-            </tr>
-            {% endfor %}
+                </tr>
+            </thead>
+               
+            
+            <tbody>
+                {% for row in matrix %}
+                <tr style="border-bottom: 1px solid #f2f2f2;">
+                    {% set outerIdx = loop.index0 %}
+                    {% for r in row %}
+                    {% if loop.index0 == 0 %}
+                        <td class="deck-name">{{ r }}</td>
+                    {% else %}
+                        <td class="{{classes[outerIdx][loop.index0]}}">{{ r }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>   
     </body>
     <footer>
         <p class="footer-line">Made by <a href="http://twitter.com/aastroza">@aastroza</a> and <a href="http://twitter.com/sikolio">@sikolio</a>. This tool uses public information from <a href="https://mtgmelee.com/">MTGMELEE</a> and we didnt ask for authorization to do so, hope its ok :)</p>
     </footer>
+    
+    
 </html>
 
 
