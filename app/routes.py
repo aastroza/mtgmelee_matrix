@@ -21,10 +21,10 @@ def query():
         tournament_url = request.form['tournament_url']
 
         #Getting data from mtgmelee
-        rounds, phases, df_players = mtgm.getTournamentData(tournament_url)
+        rounds, phases, players = mtgm.getTournamentData(tournament_url)
 
         #Doing the math for the matrix
-        matrix, classes, columns = muc.getTableData(rounds, phases, df_players)
+        matrix, classes, columns = muc.getTableData(rounds, phases, players)
 
         #Displaying results on html template
         return render_template('index.html', title='Home', matrix=matrix, columns=columns, classes=classes, tournament=tournament_url)

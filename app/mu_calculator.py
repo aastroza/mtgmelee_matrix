@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 from app import mtgmelee as mtgm
 
@@ -16,7 +15,8 @@ def get_class(value):
     return "value c0"
 
 def getMatchupData(rounds, players):
-    columns_mu = players['Decklist'].unique().tolist()
+
+    columns_mu = list(set(players.values()))
     data_mu = [[0]*len(columns_mu) for _ in range(len(columns_mu))]
 
     for round_id in rounds:
@@ -28,10 +28,8 @@ def getMatchupData(rounds, players):
                 if('awarded a bye' in row['Result']):
                     continue
                 
-                deck_player = players[players['Player']
-                                        == row['Player']]['Decklist'].values[0]
-                deck_opponent = players[players['Player']
-                                        == row['Opponent']]['Decklist'].values[0]
+                deck_player = players[row['Player']]
+                deck_opponent = players[row['Opponent']]
                 
                 if(row['Player'] in row['Result']):
                     mu_i = columns_mu.index(deck_player)

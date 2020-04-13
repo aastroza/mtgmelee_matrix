@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import pandas as pd
 
 #Web scraping for mtgmelee.com
 
@@ -41,14 +40,11 @@ def getTournamentData(tournament_url):
 
     standing = getPhaseStandings(phases[-1])
 
-    data_players = []
+    players = {}
     for row in standing:
         if(row['Decklist'] == None):
-            data_players.append([row['Player'], "Unknown"])
+            players[row['Player']] = "Unknown"
         else:
-            data_players.append([row['Player'], row['Decklist']])
+            players[row['Player']] = row['Decklist']
 
-    columns = ['Player', 'Decklist']
-    df_players = pd.DataFrame(data_players, columns=columns)
-
-    return rounds, phases, df_players
+    return rounds, phases, players
