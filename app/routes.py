@@ -16,7 +16,7 @@ def index():
 
 @app.route("/query", methods=["POST"])
 def query():
-    start_time = time.time()
+    
     if request.method == 'POST':
         tournament_url = request.form['tournament_url']
 
