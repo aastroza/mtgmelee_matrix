@@ -54,7 +54,7 @@
         <h1>Matchup Matrix Calculator for MtgMelee.com Tournaments</h1>
         <h2>Please paste your tournament url below and press the <b>Submit</b> button:</h2>
         <form action="{{ url_for('query') }}" method = "POST" enctype = "multipart/form-data">
-            <input type = "text" name = "tournament_url" size="50" value="https://mtgmelee.com/Tournament/View/374"/>
+            <input type = "text" name = "tournament_url" size="50" value={{ tournament }}>
             <input type = "submit"/>
         </form>
         <p>You read this table from left to right, each cell means the win match rate for the row deck vs the column deck. The number between parentheses corresponds to the number of matches.</p>

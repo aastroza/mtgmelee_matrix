@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from app import mtgmelee as mtgm
 
+#Matchup calculator
+
 def get_class(value):
     if value > 80:
         return "value c80"
@@ -87,7 +89,6 @@ def getMatrix(data_mu, columns_mu):
 def getTableData(rounds, phases, players):
 
     data_mu, columns_mu = getMatchupData(rounds, players)
-    print(data_mu, columns_mu)
     data_mu_short, columns_mu_short = truncateMatchups(data_mu, columns_mu)
     matrix, classes = getMatrix(data_mu_short, columns_mu_short)
     columns = ['', 'Total'] + columns_mu_short

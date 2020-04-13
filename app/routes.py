@@ -4,24 +4,28 @@ from app import mtgmelee as mtgm
 from app import mu_calculator as muc
 import urllib.request
 
-import time
+#Main for the web app. Running in Flask using html templates
 
 @app.route('/')
 @app.route('/index')
 def index():
     matrix = []
     table_columns = []
-
-    return render_template('index.html', title='Home', matrix=matrix, columns=table_columns)
+    tournament_url = "https://mtgmelee.com/Tournament/View/374"
+    return render_template('index.html', title='Home', matrix=matrix, columns=table_columns, tournament=tournament_url)
 
 @app.route("/query", methods=["POST"])
 def query():
     start_time = time.time()
     if request.method == 'POST':
         tournament_url = request.form['tournament_url']
-        # tournament = int(tournament_url.split('/')[-1])
+
+        #Getting data from mtgmelee
         rounds, phases, df_players = mtgm.getTournamentData(tournament_url)
+
+        #Doing the math for the matrix
         matrix, classes, columns = muc.getTableData(rounds, phases, df_players)
 
-        return render_template('index.html', title='Home', matrix=matrix, columns=columns, classes=classes)
+        #Displaying results on html template
+        return render_template('index.html', title='Home', matrix=matrix, columns=columns, classes=classes, tournament=tournament_url)
 

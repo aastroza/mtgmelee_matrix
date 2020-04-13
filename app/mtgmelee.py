@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
+#Web scraping for mtgmelee.com
+
 def getRoundPairings(round_id):
     ENDPOINT = "https://mtgmelee.com/Tournament/GetRoundPairings/" + \
         str(round_id)
@@ -22,7 +24,7 @@ def getTournamentData(tournament_url):
     phases = []
     response = requests.get(tournament_url)
     soup = BeautifulSoup(response.text, "html.parser")
-    
+
     divTag_phase = soup.find_all('div', {'id': 'standings-phase-selector-container'})
     for tag in divTag_phase:
         for button in tag.findAll('button'):
